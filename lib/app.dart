@@ -23,7 +23,6 @@ class App extends StatelessWidget {
       title: 'Flutter Demo',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
-        visualDensity: VisualDensity.standard,
         scaffoldBackgroundColor: colorScheme.surfaceContainerHigh,
         brightness: Brightness.dark,
         colorScheme: colorScheme,

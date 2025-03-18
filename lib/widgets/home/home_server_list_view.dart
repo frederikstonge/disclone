@@ -1,10 +1,10 @@
-import 'package:disclone/router/routes.dart';
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 
 class HomeServerListView extends StatelessWidget {
   final int? selectedServerId;
-  const HomeServerListView({super.key, required this.selectedServerId});
+  final void Function(int? serverId) setSelectedServerId;
+  
+  const HomeServerListView({super.key, required this.selectedServerId, required this.setSelectedServerId});
 
   @override
   Widget build(BuildContext context) {
@@ -26,10 +26,7 @@ class HomeServerListView extends StatelessWidget {
               padding: const EdgeInsets.symmetric(vertical: 3, horizontal: 3),
               child: InkWell(
                 onTap:
-                    () => GoRouter.of(context).pushNamed(
-                      Routes.home,
-                      queryParameters: {'selectedServerId': index != 0 ? '$index' : null},
-                    ),
+                    () => setSelectedServerId(index != 0 ? index : null),
                 child: CircleAvatar(radius: 20, child: Text('$index')),
               ),
             ),

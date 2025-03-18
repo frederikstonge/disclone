@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 class AnimationlessPage<T> extends Page<T> {
   final Widget child;
 
-  const AnimationlessPage({required this.child});
+  const AnimationlessPage({super.key, required this.child});
   
   
   @override

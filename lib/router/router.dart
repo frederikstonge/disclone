@@ -3,8 +3,8 @@ import 'package:disclone/router/routes.dart';
 import 'package:disclone/widgets/account/account_view.dart';
 import 'package:disclone/widgets/home/chat/chat_view.dart';
 import 'package:disclone/widgets/home/home_layout_view.dart';
-import 'package:disclone/widgets/home/server/text_channel_view.dart';
-import 'package:disclone/widgets/home/server/voice_channel_view.dart';
+import 'package:disclone/widgets/home/channels/text_channel_view.dart';
+import 'package:disclone/widgets/home/channels/voice_channel_view.dart';
 import 'package:disclone/widgets/shell/shell.dart';
 import 'package:disclone/widgets/notifications/notifications_view.dart';
 import 'package:flutter/material.dart';
@@ -33,18 +33,19 @@ final router = GoRouter(
               path: Routes.homeRoute,
               pageBuilder: (context, state) {
                 final selectedServerIdParameter =
-                    state.uri.queryParameters['selectedServerId'];
+                    state.uri.queryParameters['serverId'];
                 final selectedServerId =
                     selectedServerIdParameter != null
                         ? int.tryParse(selectedServerIdParameter)
                         : null;
                 final selectedChannelIdParameter =
-                    state.uri.queryParameters['selectedChannelId'];
+                    state.uri.queryParameters['channelId'];
                 final selectedChannelId =
                     selectedChannelIdParameter != null
                         ? int.tryParse(selectedChannelIdParameter)
                         : null;
                 return AnimationlessPage(
+                  key: ValueKey(state.uri.toString()),
                   child: HomeLayoutView(
                     selectedServerId: selectedServerId,
                     selectedChannelId: selectedChannelId,
@@ -58,7 +59,7 @@ final router = GoRouter(
                   builder: (context, state) {
                     final chatId =
                         int.tryParse(state.pathParameters['id'] ?? '0') ?? 0;
-                    return ChatView(chatId: chatId);
+                    return ChatView(key: state.pageKey, chatId: chatId);
                   },
                 ),
                 GoRoute(
@@ -71,7 +72,12 @@ final router = GoRouter(
                     final channelId = int.parse(
                       state.pathParameters['channelId']!,
                     );
-                    return TextChannelView(serverId: serverId, channelId: channelId);
+                    return TextChannelView(
+                      key: state.pageKey,
+                      serverId: serverId,
+                      channelId: channelId,
+                      isSplitScreen: false,
+                    );
                   },
                 ),
                 GoRoute(
@@ -84,7 +90,12 @@ final router = GoRouter(
                     final channelId = int.parse(
                       state.pathParameters['channelId']!,
                     );
-                    return VoiceChannelView(serverId: serverId, channelId: channelId);
+                    return VoiceChannelView(
+                      key: state.pageKey,
+                      serverId: serverId,
+                      channelId: channelId,
+                      isSplitScreen: false,
+                    );
                   },
                 ),
               ],
@@ -97,7 +108,8 @@ final router = GoRouter(
             GoRoute(
               name: Routes.notifications,
               path: Routes.notificationsRoute,
-              builder: (context, state) => NotificationsView(),
+              builder:
+                  (context, state) => NotificationsView(key: state.pageKey),
             ),
           ],
         ),
@@ -107,7 +119,7 @@ final router = GoRouter(
             GoRoute(
               name: Routes.account,
               path: Routes.accountRoute,
-              builder: (context, state) => AccountView(),
+              builder: (context, state) => AccountView(key: state.pageKey),
             ),
           ],
         ),

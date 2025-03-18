@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 
 class HomeServerListView extends StatelessWidget {
-  final int? selectedServerId;
-  final void Function(int? serverId) setSelectedServerId;
+  final int? serverId;
+  final void Function(int? serverId) setServerId;
   
-  const HomeServerListView({super.key, required this.selectedServerId, required this.setSelectedServerId});
+  const HomeServerListView({super.key, required this.serverId, required this.setServerId});
 
   @override
   Widget build(BuildContext context) {
@@ -26,7 +26,7 @@ class HomeServerListView extends StatelessWidget {
               padding: const EdgeInsets.symmetric(vertical: 3, horizontal: 3),
               child: InkWell(
                 onTap:
-                    () => setSelectedServerId(index != 0 ? index : null),
+                    () => setServerId(index != 0 ? index : null),
                 child: CircleAvatar(radius: 20, child: Text('$index')),
               ),
             ),

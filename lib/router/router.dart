@@ -1,10 +1,9 @@
 import 'package:disclone/router/animationless_page.dart';
 import 'package:disclone/router/routes.dart';
 import 'package:disclone/widgets/account/account_view.dart';
-import 'package:disclone/widgets/home/chat/chat_view.dart';
 import 'package:disclone/widgets/home/home_layout_view.dart';
-import 'package:disclone/widgets/home/channels/text_channel_view.dart';
-import 'package:disclone/widgets/home/channels/voice_channel_view.dart';
+import 'package:disclone/widgets/home/server/text_channel_view.dart';
+import 'package:disclone/widgets/home/server/voice_channel_view.dart';
 import 'package:disclone/widgets/shell/shell.dart';
 import 'package:disclone/widgets/notifications/notifications_view.dart';
 import 'package:flutter/material.dart';
@@ -32,36 +31,27 @@ final router = GoRouter(
               name: Routes.home,
               path: Routes.homeRoute,
               pageBuilder: (context, state) {
-                final selectedServerIdParameter =
+                final serverIdParameter =
                     state.uri.queryParameters['serverId'];
-                final selectedServerId =
-                    selectedServerIdParameter != null
-                        ? int.tryParse(selectedServerIdParameter)
+                final serverId =
+                    serverIdParameter != null
+                        ? int.tryParse(serverIdParameter)
                         : null;
-                final selectedChannelIdParameter =
+                final channelIdParameter =
                     state.uri.queryParameters['channelId'];
-                final selectedChannelId =
-                    selectedChannelIdParameter != null
-                        ? int.tryParse(selectedChannelIdParameter)
+                final channelId =
+                    channelIdParameter != null
+                        ? int.tryParse(channelIdParameter)
                         : null;
                 return AnimationlessPage(
                   key: ValueKey(state.uri.toString()),
                   child: HomeLayoutView(
-                    selectedServerId: selectedServerId,
-                    selectedChannelId: selectedChannelId,
+                    serverId: serverId,
+                    channelId: channelId,
                   ),
                 );
               },
               routes: [
-                GoRoute(
-                  name: Routes.chat,
-                  path: Routes.chatRoute,
-                  builder: (context, state) {
-                    final chatId =
-                        int.tryParse(state.pathParameters['id'] ?? '0') ?? 0;
-                    return ChatView(key: state.pageKey, chatId: chatId);
-                  },
-                ),
                 GoRoute(
                   name: Routes.textChannel,
                   path: Routes.textChannelRoute,

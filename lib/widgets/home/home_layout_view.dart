@@ -1,17 +1,21 @@
 import 'package:disclone/router/routes.dart';
-import 'package:disclone/widgets/home/server_layout_view.dart';
+import 'package:disclone/widgets/common/split_screen_layout_view.dart';
+import 'package:disclone/widgets/home/chat/chat_view.dart';
+import 'package:disclone/widgets/home/server/text_channel_view.dart';
+import 'package:disclone/widgets/home/server/voice_channel_view.dart';
 import 'package:disclone/widgets/home/home_server_list_view.dart';
+import 'package:disclone/widgets/home/server/server_view.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 class HomeLayoutView extends StatelessWidget {
-  final int? selectedServerId;
-  final int? selectedChannelId;
+  final int? serverId;
+  final int? channelId;
 
   const HomeLayoutView({
     super.key,
-    required this.selectedServerId,
-    required this.selectedChannelId,
+    required this.serverId,
+    required this.channelId,
   });
 
   @override
@@ -21,32 +25,57 @@ class HomeLayoutView extends StatelessWidget {
         SizedBox.fromSize(
           size: Size.fromWidth(60),
           child: HomeServerListView(
-            selectedServerId: selectedServerId,
-            setSelectedServerId:
-                (serverId) => _setSelectedServerId(context, serverId),
+            serverId: serverId,
+            setServerId:
+                (serverId) => _setServerId(context, serverId),
           ),
         ),
         Expanded(
-          child:
-              selectedServerId != null
-                  ? ServerLayoutView(
-                    key: ValueKey(selectedServerId!),
-                    selectedServerId: selectedServerId!,
-                    selectedChannelId: selectedChannelId ?? 0,
-                    setSelectedChannelId:
-                        (channelId, isSplitScreen) => _setSelectedChannelId(
-                          context,
-                          channelId,
-                          isSplitScreen,
+          child: SplitScreenLayoutView(
+            builder:
+                (context, isSplitScreen) =>
+                    serverId != null
+                        ? ServerView(
+                          key: ValueKey(serverId),
+                          channelId: channelId ?? 0,
+                          setChannelId:
+                              (channelId) => _setChannelId(
+                                context,
+                                channelId,
+                                isSplitScreen,
+                              ),
+                        )
+                        : ChatView(
+                          channelId: channelId ?? 0,
+                          setChannelId:
+                              (channelId) => _setChannelId(
+                                context,
+                                channelId,
+                                isSplitScreen,
+                              ),
                         ),
-                  )
-                  : Placeholder(),
+            optionalBuilder:
+                (context, isSplitScreen) =>
+                    (channelId ?? 0) % 2 == 0
+                        ? TextChannelView(
+                          key: ValueKey(channelId),
+                          serverId: serverId,
+                          channelId: channelId ?? 0,
+                          isSplitScreen: true,
+                        )
+                        : VoiceChannelView(
+                          key: ValueKey(channelId),
+                          serverId: serverId,
+                          channelId: channelId ?? 0,
+                          isSplitScreen: true,
+                        ),
+          ),
         ),
       ],
     );
   }
 
-  void _setSelectedServerId(BuildContext context, int? serverId) {
+  void _setServerId(BuildContext context, int? serverId) {
     GoRouter.of(context).goNamed(
       Routes.home,
       queryParameters: {
@@ -55,7 +84,7 @@ class HomeLayoutView extends StatelessWidget {
     );
   }
 
-  void _setSelectedChannelId(
+  void _setChannelId(
     BuildContext context,
     int channelId,
     bool isSplitScreen,
@@ -64,7 +93,7 @@ class HomeLayoutView extends StatelessWidget {
       GoRouter.of(context).goNamed(
         Routes.home,
         queryParameters: {
-          if (selectedServerId != null) ...{'serverId': '$selectedServerId'},
+          if (serverId != null) ...{'serverId': '$serverId'},
           'channelId': '$channelId',
         },
       );
@@ -73,7 +102,7 @@ class HomeLayoutView extends StatelessWidget {
         GoRouter.of(context).goNamed(
           Routes.textChannel,
           pathParameters: {
-            if (selectedServerId != null) ...{'serverId': '$selectedServerId'},
+            if (serverId != null) ...{'serverId': '$serverId'},
             'channelId': '$channelId',
           },
         );
@@ -81,7 +110,7 @@ class HomeLayoutView extends StatelessWidget {
         GoRouter.of(context).goNamed(
           Routes.voiceChannel,
           pathParameters: {
-            if (selectedServerId != null) ...{'serverId': '$selectedServerId'},
+            if (serverId != null) ...{'serverId': '$serverId'},
             'channelId': '$channelId',
           },
         );

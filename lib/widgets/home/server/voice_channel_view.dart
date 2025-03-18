@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:responsive_framework/responsive_framework.dart';
 
-class TextChannelView extends StatefulWidget {
-  final int serverId;
+class VoiceChannelView extends StatefulWidget {
+  final int? serverId;
   final int channelId;
   final bool isSplitScreen;
-  const TextChannelView({
+  const VoiceChannelView({
     super.key,
     required this.serverId,
     required this.channelId,
@@ -14,10 +14,11 @@ class TextChannelView extends StatefulWidget {
   });
 
   @override
-  State<TextChannelView> createState() => _TextChannelViewState();
+  State<VoiceChannelView> createState() => _VoiceChannelViewState();
 }
 
-class _TextChannelViewState extends State<TextChannelView> with WidgetsBindingObserver {
+class _VoiceChannelViewState extends State<VoiceChannelView>
+    with WidgetsBindingObserver {
   @override
   void initState() {
     WidgetsBinding.instance.addObserver(this);
@@ -50,30 +51,7 @@ class _TextChannelViewState extends State<TextChannelView> with WidgetsBindingOb
         title: Text('Chat'),
         automaticallyImplyLeading: !widget.isSplitScreen,
       ),
-      body: Column(
-        children: [
-          Expanded(
-            child: ListView.builder(
-              reverse: true,
-              itemCount: 20,
-              itemBuilder:
-                  (context, index) => Align(
-                    alignment:
-                        index % 2 == 0
-                            ? Alignment.centerLeft
-                            : Alignment.centerRight,
-                    child: Card(
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Text('Text $index'),
-                      ),
-                    ),
-                  ),
-            ),
-          ),
-          TextField(),
-        ],
-      ),
+      body: Placeholder(),
     );
   }
 }

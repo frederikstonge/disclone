@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 
 class ServerView extends StatelessWidget {
-  final int selectedChannelId;
-  final void Function(int channelId) setSelectedChannelId;
+  final int channelId;
+  final void Function(int channelId) setChannelId;
   const ServerView({
     super.key,
-    required this.selectedChannelId,
-    required this.setSelectedChannelId,
+    required this.channelId,
+    required this.setChannelId,
   });
 
   @override
@@ -29,8 +29,8 @@ class ServerView extends StatelessWidget {
                       (context, index) => ListTile(
                         leading: Icon(Icons.text_format),
                         title: Text('Text Channel $index', style: TextStyle(fontSize: 12)),
-                        onTap: () => setSelectedChannelId(index),
-                        selected: selectedChannelId == index,
+                        onTap: () => setChannelId(index),
+                        selected: channelId == index,
                       ),
                 ),
                 isExpanded: true,
@@ -47,8 +47,8 @@ class ServerView extends StatelessWidget {
                       (context, index) => ListTile(
                         leading: Icon(Icons.speaker),
                         title: Text('Voice Channel $index', style: TextStyle(fontSize: 12)),
-                        onTap: () => setSelectedChannelId(index),
-                        selected: selectedChannelId == index,
+                        onTap: () => setChannelId(index),
+                        selected: channelId == index,
                       ),
                 ),
                 isExpanded: true,
